@@ -141,6 +141,7 @@ export class Register extends Component {
               label="Birth date"
               type="date"
               // defaultValue="1999-01-21"
+              fullWidth
               InputLabelProps={{
                 shrink: true,
               }}

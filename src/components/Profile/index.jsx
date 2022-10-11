@@ -9,7 +9,10 @@ export class Profile extends Component {
     render() {
       return (
         <div>
-          <Grid>
+          <Grid
+          justifyContent="center"
+          alignItems="center"
+          >
             <ArrowBackIcon />
             <Link to="/main" element={<Main />}>Go to main page</Link>
           </Grid>
