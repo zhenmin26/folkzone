@@ -62,7 +62,7 @@ export class Login extends Component {
             required
             fullWidth
             name="login_password"
-            label="login_password"
+            label="Password"
             type="password"
             id="login_password"
             // autoComplete="current-password"
