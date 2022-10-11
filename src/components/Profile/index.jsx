@@ -1,24 +1,20 @@
 import React, { Component } from 'react'
 import Main from '../Main';
 import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import Label from "../Label"
+import { Button, Avatar, CardContent, Typography, Grid, TextField, Box, Divider} from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export class Profile extends Component {
     render() {
       return (
         <div>
-          {/* cannot click, but the link works */}
-          <Link to="/main" element={<Main />}>Go to main page</Link>
-          <Grid container spacing={6} columns={16}>
-            <Grid item xs={8}>
+          <Grid>
+            <ArrowBackIcon />
+            <Link to="/main" element={<Main />}>Go to main page</Link>
+          </Grid>
+          <Grid container xs={12}>
+            <Grid item xs={6}>
               <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
               <Button
                 variant="outlined"
@@ -27,12 +23,12 @@ export class Profile extends Component {
                 }}
                 >Upload new picture</Button>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={6}>
               <Label />
             </Grid>
           </Grid>
           <Divider />
-          <Grid container spacing={6} columns={16}>
+          <Grid container spacing={6}>
             {/* Current info */}
             <Grid item xs={8}>
               <CardContent>

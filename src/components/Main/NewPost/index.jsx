@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Grid from '@mui/material/Grid';
+import { Button, TextField, Box, IconButton, Grid, Card } from '@mui/material';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 export default class NewPost extends Component {
@@ -12,20 +8,34 @@ export default class NewPost extends Component {
         <div>
           <Box>
             <Grid>
-                <IconButton color="primary" aria-label="upload picture" component="label">
-                    <input hidden accept="image/*" type="file" />
-                    <PhotoCamera />
-                </IconButton>
-                <TextField
-                id="outlined-multiline-static"
-                multiline
-                rows={4}
-                defaultValue="Your post here"
-                />
-            </Grid>
-            <Grid>
-                <Button variant="outlined">Cancel</Button>
-                <Button variant="outlined">Post</Button>
+              <Grid
+              container
+              columns={12}
+              >
+                <Grid item columns={6}
+                justifyContent="center"
+                alignItems="center"
+                >
+                  <Card>
+                    <IconButton color="primary" aria-label="upload picture" component="label">
+                        <input hidden accept="image/*" type="file" />
+                        <PhotoCamera />
+                    </IconButton>
+                  </Card>
+                </Grid>
+                <Grid item columns={6}>
+                  <TextField
+                  id="outlined-multiline-static"
+                  multiline
+                  defaultValue="Your post here"
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+              >
+                  <Button variant="outlined">Cancel</Button>
+                  <Button variant="outlined">Post</Button>
+              </Grid>
             </Grid>
           </Box>
         </div>
