@@ -16,33 +16,42 @@ export class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      usernameErrorText : "",
-      phoneErrorText : "",
-      emailErrorText : "",
-      brithdateErrorText : "",
-      zipcodeErrorText : "",
-      pwdErrorText : "",
-      login: false
+      usernameErrorText: "",
+      phoneErrorText: "",
+      emailErrorText: "",
+      brithdateErrorText: "",
+      zipcodeErrorText: "",
+      pwdErrorText: "",
+      login: false,
     };
+  }
+
+  checkUsername(event) {
+    let usernamePattern = /^[a-zA-Z]+[a-zA-Z0-9]{0,}$/;
+    if (usernamePattern.test(event.target.value)) {
+      this.setState({ usernameErrorText: "" });
+    } else if (event.target.value === "") {
+      this.setState({ usernameErrorText: "Required field" });
+    } else {
+      this.setState({ usernameErrorText: "Invalid format" });
+    }
   }
 
   checkPhone(event) {
     // console.log("Checking phone");
     let phonePattern = /[0-9]{3}-[0-9]{3}-[0-9]{4}/;
     if (phonePattern.test(event.target.value)) {
-      this.setState({phoneErrorText : ""});
-    }
-    else if (event.target.value === ""){
-      this.setState({phoneErrorText : "Required field"});
-    }
-    else{
-      this.setState({phoneErrorText : "Invalid format"});
+      this.setState({ phoneErrorText: "" });
+    } else if (event.target.value === "") {
+      this.setState({ phoneErrorText: "Required field" });
+    } else {
+      this.setState({ phoneErrorText: "Invalid format" });
     }
   }
 
   checkBirthdate(event) {
-    let birth = event.target.value
-    console.log(birth)
+    let birth = event.target.value;
+    // console.log(birth);
     let today = new Date();
     let birthdate = birth.split("-");
     let year = birthdate[0];
@@ -58,7 +67,7 @@ export class Register extends Component {
       age -= 1;
     }
     if (age < 18) {
-      this.setState({brithdateErrorText : "Age under 18"});
+      this.setState({ brithdateErrorText: "Age under 18" });
     }
   }
 
@@ -66,13 +75,11 @@ export class Register extends Component {
     // console.log("Checking email");
     let emailPattern = /(\w+\.?\w*)\+?\w*@\w+\.?\w*\.[a-z]+/;
     if (emailPattern.test(event.target.value)) {
-      this.setState({emailErrorText : ""});
-    }
-    else if (event.target.value === ""){
-      this.setState({emailErrorText : "Required field"});
-    }
-    else{
-      this.setState({emailErrorText : "Invalid format"});
+      this.setState({ emailErrorText: "" });
+    } else if (event.target.value === "") {
+      this.setState({ emailErrorText: "Required field" });
+    } else {
+      this.setState({ emailErrorText: "Invalid format" });
     }
   }
 
@@ -80,13 +87,11 @@ export class Register extends Component {
     // console.log("Checking zipcode");
     let zipPattern = /[0-9]{5}$/;
     if (zipPattern.test(event.target.value)) {
-      this.setState({zipcodeErrorText : ""});
-    }
-    else if (event.target.value === ""){
-      this.setState({zipcodeErrorText : "Required field"});
-    }
-    else{
-      this.setState({zipcodeErrorText : "Invalid format"});
+      this.setState({ zipcodeErrorText: "" });
+    } else if (event.target.value === "") {
+      this.setState({ zipcodeErrorText: "Required field" });
+    } else {
+      this.setState({ zipcodeErrorText: "Invalid format" });
     }
   };
 
@@ -95,49 +100,47 @@ export class Register extends Component {
     // get register data
     const data = new FormData(event.currentTarget);
     // username
-    if (data.get("name")==="") {
-      this.setState({usernameErrorText : "Required field"});
+    if (data.get("name") === "") {
+      this.setState({ usernameErrorText: "Required field" });
     }
     // phone
-    if(data.get("phone")===""){
-      this.setState({phoneErrorText : "Required field"});
+    if (data.get("phone") === "") {
+      this.setState({ phoneErrorText: "Required field" });
     }
     // birthdate
-    if(data.get("birthdate")===""){
-      this.setState({brithdateErrorText : "Required field"});
+    if (data.get("birthdate") === "") {
+      this.setState({ brithdateErrorText: "Required field" });
     }
     // email
-    if(data.get("email")===""){
-      this.setState({emailErrorText : "Required field"});
+    if (data.get("email") === "") {
+      this.setState({ emailErrorText: "Required field" });
     }
     // zipcode
-    if(data.get("zipcode")===""){
-      this.setState({zipcodeErrorText : "Required field"});
+    if (data.get("zipcode") === "") {
+      this.setState({ zipcodeErrorText: "Required field" });
     }
-    if(data.get("password")===""){
-      this.setState({pwdErrorText : "Required field"});
+    if (data.get("password") === "") {
+      this.setState({ pwdErrorText: "Required field" });
     }
-    if(data.get("confirmPassword")===""){
-      this.setState({pwdErrorText : "Required field"});
+    if (data.get("confirmPassword") === "") {
+      this.setState({ pwdErrorText: "Required field" });
     }
-    if(data.get("password")!=="" && data.get("confirmPassword")!=="" && data.get("password") === data.get("confirmPassword")){
-      this.setState({login : true})
-    }
-    else if(data.get("password") !== data.get("confirmPassword")){
-      this.setState({pwdErrorText : "Password does not match"})
-    }
-    else{
-      this.setState({pwdErrorText : "Required field"})
+    if (
+      data.get("password") !== "" &&
+      data.get("confirmPassword") !== "" &&
+      data.get("password") === data.get("confirmPassword")
+    ) {
+      this.setState({ login: true });
+    } else if (data.get("password") !== data.get("confirmPassword")) {
+      this.setState({ pwdErrorText: "Password does not match" });
+    } else {
+      this.setState({ pwdErrorText: "Required field" });
     }
   }
 
   render() {
     if (this.state.login) {
-      return (
-        <Routes>
-          <Route path="*" element={<Navigate to="/main" />} />
-        </Routes>
-      );
+      return <Navigate to="/main" />;
     } else {
       return (
         <Container component="main" maxWidth="xs">
@@ -169,8 +172,12 @@ export class Register extends Component {
                   label="Username"
                   autoComplete="name"
                   autoFocus
-                  helperText = {this.state.usernameErrorText}
-                  error = {this.state.usernameErrorText==="Required field" }
+                  onChange={this.checkUsername.bind(this)}
+                  helperText={this.state.usernameErrorText}
+                  error={
+                    this.state.usernameErrorText === "Invalid format" ||
+                    this.state.usernameErrorText === "Required field"
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -188,9 +195,12 @@ export class Register extends Component {
                   id="phone"
                   label="Phone number"
                   name="phone"
-                  onChange = {this.checkPhone.bind(this)}
-                  helperText = {this.state.phoneErrorText}
-                  error = {this.state.phoneErrorText==="Invalid format" || this.state.phoneErrorText==="Required field" }
+                  onChange={this.checkPhone.bind(this)}
+                  helperText={this.state.phoneErrorText}
+                  error={
+                    this.state.phoneErrorText === "Invalid format" ||
+                    this.state.phoneErrorText === "Required field"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -205,9 +215,12 @@ export class Register extends Component {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  onChange = {this.checkBirthdate.bind(this)}
-                  helperText = {this.state.brithdateErrorText}
-                  error = {this.state.brithdateErrorText==="Age under 18" || this.state.brithdateErrorText==="Required field" }
+                  onChange={this.checkBirthdate.bind(this)}
+                  helperText={this.state.brithdateErrorText}
+                  error={
+                    this.state.brithdateErrorText === "Age under 18" ||
+                    this.state.brithdateErrorText === "Required field"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -218,9 +231,12 @@ export class Register extends Component {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  onChange = {this.checkEmail.bind(this)}
-                  helperText = {this.state.emailErrorText}
-                  error = {this.state.emailErrorText==="Invalid format" || this.state.emailErrorText==="Required field" }
+                  onChange={this.checkEmail.bind(this)}
+                  helperText={this.state.emailErrorText}
+                  error={
+                    this.state.emailErrorText === "Invalid format" ||
+                    this.state.emailErrorText === "Required field"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -231,9 +247,12 @@ export class Register extends Component {
                   label="Zip code"
                   name="zipcode"
                   autoComplete="zipcode"
-                  onChange = {this.checkZipcode.bind(this)}
-                  helperText = {this.state.zipcodeErrorText}
-                  error = {this.state.zipcodeErrorText==="Invalid format" || this.state.zipcodeErrorText==="Required field" }
+                  onChange={this.checkZipcode.bind(this)}
+                  helperText={this.state.zipcodeErrorText}
+                  error={
+                    this.state.zipcodeErrorText === "Invalid format" ||
+                    this.state.zipcodeErrorText === "Required field"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -245,8 +264,11 @@ export class Register extends Component {
                   type="password"
                   id="password"
                   autoComplete="new-password"
-                  helperText = {this.state.pwdErrorText}
-                  error = {this.state.pwdErrorText==="Password does not match" || this.state.pwdErrorText==="Required field" }
+                  helperText={this.state.pwdErrorText}
+                  error={
+                    this.state.pwdErrorText === "Password does not match" ||
+                    this.state.pwdErrorText === "Required field"
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -258,8 +280,11 @@ export class Register extends Component {
                   type="password"
                   id="confirmPassword"
                   autoComplete="confirm-password"
-                  helperText = {this.state.pwdErrorText}
-                  error = {this.state.pwdErrorText==="Password does not match" || this.state.pwdErrorText==="Required field" }
+                  helperText={this.state.pwdErrorText}
+                  error={
+                    this.state.pwdErrorText === "Password does not match" ||
+                    this.state.pwdErrorText === "Required field"
+                  }
                 />
               </Grid>
             </Grid>

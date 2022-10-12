@@ -7,10 +7,12 @@ import {
   // Avatar,
   Container,
   CssBaseline,
-  Grid
+  Grid,
 } from "@mui/material";
 import { Routes, Route, Navigate } from "react-router-dom";
 // import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+
+// Kulas Light
 
 export class Login extends Component {
   constructor(props) {
@@ -21,11 +23,12 @@ export class Login extends Component {
   }
 
   handleSubmit(event) {
+    // console.log("login in")
     event.preventDefault();
     // get user data
     const data = new FormData(event.currentTarget);
-    // data.get("username")
-    // data.get("password")
+    // console.log(data.get("username"))
+    // console.log(data.get("login_password"))
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((response) => response.json())
       .then((json) => {
@@ -33,12 +36,10 @@ export class Login extends Component {
         json.forEach((user) => {
           if (
             user.username == data.get("username") &&
-            data.get("password") == user.address.street
+            data.get("login_password") == user.address.street
           ) {
-            console.log("Login successfully");
-            this.setState({
-              login: true,
-            });
+            // console.log("Login successfully");
+            this.setState({ login: true });
           }
         });
       });
@@ -46,18 +47,14 @@ export class Login extends Component {
 
   render() {
     if (this.state.login) {
-      return (
-        <Routes>
-          <Route path="*" element={<Navigate to="/main" />} />
-        </Routes>
-      );
+      return <Navigate to="/main" />;
     } else {
       return (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
             component="form"
-            onSubmit={this.handleSubmit}
+            onSubmit={this.handleSubmit.bind(this)}
             noValidate
             sx={{
               marginTop: 8,
