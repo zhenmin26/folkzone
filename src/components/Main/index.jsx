@@ -32,10 +32,10 @@ export default class Main extends Component {
           </Grid>
           <Grid item xs={9}>
             <Grid container spacing={1}>
-              <Grid item xs={6}>
+              <Grid item columns={6}>
                 <NewPost />
               </Grid>
-              <Grid item  xs={4}>
+              <Grid item columns={6}>
                 <Label />
               </Grid>
             </Grid>
