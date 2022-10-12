@@ -32,7 +32,7 @@ export class Register extends Component {
     if (phonePattern.test(event.target.value)) {
       this.setState({phoneErrorText : ""});
     }
-    else if (event.target.value == ""){
+    else if (event.target.value === ""){
       this.setState({phoneErrorText : "Required field"});
     }
     else{
@@ -68,7 +68,7 @@ export class Register extends Component {
     if (emailPattern.test(event.target.value)) {
       this.setState({emailErrorText : ""});
     }
-    else if (event.target.value == ""){
+    else if (event.target.value === ""){
       this.setState({emailErrorText : "Required field"});
     }
     else{
@@ -82,7 +82,7 @@ export class Register extends Component {
     if (zipPattern.test(event.target.value)) {
       this.setState({zipcodeErrorText : ""});
     }
-    else if (event.target.value == ""){
+    else if (event.target.value === ""){
       this.setState({zipcodeErrorText : "Required field"});
     }
     else{
@@ -95,36 +95,35 @@ export class Register extends Component {
     // get register data
     const data = new FormData(event.currentTarget);
     // username
-    if (data.get("name")=="") {
+    if (data.get("name")==="") {
       this.setState({usernameErrorText : "Required field"});
     }
     // phone
-    if(data.get("phone")==""){
+    if(data.get("phone")===""){
       this.setState({phoneErrorText : "Required field"});
-      
     }
     // birthdate
-    if(data.get("birthdate")==""){
+    if(data.get("birthdate")===""){
       this.setState({brithdateErrorText : "Required field"});
     }
     // email
-    if(data.get("email")==""){
+    if(data.get("email")===""){
       this.setState({emailErrorText : "Required field"});
     }
     // zipcode
-    if(data.get("zipcode")==""){
+    if(data.get("zipcode")===""){
       this.setState({zipcodeErrorText : "Required field"});
     }
-    if(data.get("password")==""){
+    if(data.get("password")===""){
       this.setState({pwdErrorText : "Required field"});
     }
-    if(data.get("confirmPassword")==""){
+    if(data.get("confirmPassword")===""){
       this.setState({pwdErrorText : "Required field"});
     }
-    if(data.get("password")!="" && data.get("confirmPassword")!="" && data.get("password") == data.get("confirmPassword")){
+    if(data.get("password")!=="" && data.get("confirmPassword")!=="" && data.get("password") === data.get("confirmPassword")){
       this.setState({login : true})
     }
-    else if(data.get("password") != data.get("confirmPassword")){
+    else if(data.get("password") !== data.get("confirmPassword")){
       this.setState({pwdErrorText : "Password does not match"})
     }
     else{
@@ -171,7 +170,7 @@ export class Register extends Component {
                   autoComplete="name"
                   autoFocus
                   helperText = {this.state.usernameErrorText}
-                  error = {this.state.usernameErrorText=="Required field" }
+                  error = {this.state.usernameErrorText==="Required field" }
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -191,7 +190,7 @@ export class Register extends Component {
                   name="phone"
                   onChange = {this.checkPhone.bind(this)}
                   helperText = {this.state.phoneErrorText}
-                  error = {this.state.phoneErrorText=="Invalid format" || this.state.phoneErrorText=="Required field" }
+                  error = {this.state.phoneErrorText==="Invalid format" || this.state.phoneErrorText==="Required field" }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -208,7 +207,7 @@ export class Register extends Component {
                   }}
                   onChange = {this.checkBirthdate.bind(this)}
                   helperText = {this.state.brithdateErrorText}
-                  error = {this.state.brithdateErrorText=="Age under 18" || this.state.brithdateErrorText=="Required field" }
+                  error = {this.state.brithdateErrorText==="Age under 18" || this.state.brithdateErrorText==="Required field" }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -221,7 +220,7 @@ export class Register extends Component {
                   autoComplete="email"
                   onChange = {this.checkEmail.bind(this)}
                   helperText = {this.state.emailErrorText}
-                  error = {this.state.emailErrorText=="Invalid format" || this.state.emailErrorText=="Required field" }
+                  error = {this.state.emailErrorText==="Invalid format" || this.state.emailErrorText==="Required field" }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -234,7 +233,7 @@ export class Register extends Component {
                   autoComplete="zipcode"
                   onChange = {this.checkZipcode.bind(this)}
                   helperText = {this.state.zipcodeErrorText}
-                  error = {this.state.zipcodeErrorText=="Invalid format" || this.state.zipcodeErrorText=="Required field" }
+                  error = {this.state.zipcodeErrorText==="Invalid format" || this.state.zipcodeErrorText==="Required field" }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -247,7 +246,7 @@ export class Register extends Component {
                   id="password"
                   autoComplete="new-password"
                   helperText = {this.state.pwdErrorText}
-                  error = {this.state.pwdErrorText=="Password does not match" || this.state.pwdErrorText=="Required field" }
+                  error = {this.state.pwdErrorText==="Password does not match" || this.state.pwdErrorText==="Required field" }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -260,7 +259,7 @@ export class Register extends Component {
                   id="confirmPassword"
                   autoComplete="confirm-password"
                   helperText = {this.state.pwdErrorText}
-                  error = {this.state.pwdErrorText=="Password does not match" || this.state.pwdErrorText=="Required field" }
+                  error = {this.state.pwdErrorText==="Password does not match" || this.state.pwdErrorText==="Required field" }
                 />
               </Grid>
             </Grid>
