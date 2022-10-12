@@ -9,10 +9,11 @@ import {
   CssBaseline,
   Grid,
 } from "@mui/material";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 // import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import store from "../../../redux/store";
 
-// Kulas Light
+
 
 export class Login extends Component {
   constructor(props) {
@@ -32,6 +33,8 @@ export class Login extends Component {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((response) => response.json())
       .then((json) => {
+        // get all users
+        store.dispatch({ type: "getAllUser", data: json });
         // get array of objects(user info)
         json.forEach((user) => {
           if (
@@ -39,6 +42,19 @@ export class Login extends Component {
             data.get("login_password") == user.address.street
           ) {
             // console.log("Login successfully");
+            // get current user
+            store.dispatch({ type: "getUser", data: user });
+            // get friend users
+            const curId = user.id;
+            let friendIds = new Array(3);
+            for (var i = 1; i <= 3; i++) {
+              if (curId + i == 10) {
+                friendIds[i-1] = 10;
+              } else {
+                friendIds[i-1] = (curId + i) % 10;
+              }
+            }
+            store.dispatch({ type: "getFriendUserId", data: friendIds });
             this.setState({ login: true });
           }
         });

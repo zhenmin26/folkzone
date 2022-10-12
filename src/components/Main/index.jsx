@@ -9,6 +9,7 @@ import { Typography, Stack, Divider, Grid } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import store from "../../redux/store";
+import { Link } from "react-router-dom";
 
 export default class Main extends Component {
   constructor(props) {
@@ -17,8 +18,10 @@ export default class Main extends Component {
       // startOfCards: 0,
       show_cards: [1, 2, 3],
       // cards: store.getState().postReducer.posts,
-      cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      length: 10,
       posts: store.getState().postReducer.posts,
+      allUsers: store.getState().userReducer.allUsers,
+      friendUserIds:  store.getState().userReducer.friendUserIds
     };
   }
 
@@ -26,7 +29,7 @@ export default class Main extends Component {
 
   onClickBack = () => {
     // console.log("back")
-    const length = this.state.cards.length; // 10
+    const length = this.state.length; // 10
     let prev_show_cards = this.state.show_cards;
     let new_show_cards = [0, 0, 0];
     for (var i = 0; i < 3; i++) {
@@ -45,7 +48,7 @@ export default class Main extends Component {
 
   onClickForward = () => {
     // console.log("forward")
-    const length = this.state.cards.length; // 10
+    const length = this.state.length; // 10
     let prev_show_cards = this.state.show_cards;
     // console.log(prev_show_cards);
     let new_show_cards = [0, 0, 0];
@@ -64,8 +67,13 @@ export default class Main extends Component {
   };
 
   render() {
+    // console.log("main")
     return (
       <div>
+        <div>
+          <Link to="/">Log out</Link>
+          <Link to="/profile">Profile</Link>
+        </div>
         <Grid container xs={12} spacing={5}>
           <Grid item xs={3}>
             {/* user info */}
@@ -74,10 +82,16 @@ export default class Main extends Component {
             </Grid>
             {/* frinds */}
             <Grid>
-              <Friend />
+              {
+                this.state.allUsers.map((user)=>{
+                    if(this.state.friendUserIds.includes(user.id)){
+                      return <Friend userInfo={user}/>
+                    }
+                })
+              }
             </Grid>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Grid container spacing={1}>
               <Grid item columns={6}>
                 <NewPost />

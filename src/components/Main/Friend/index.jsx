@@ -1,38 +1,25 @@
-import React, { Component } from 'react';
-import UserInfo from '../UserInfo';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import React, { Component } from "react";
+import { Avatar, Typography, TextField, Box } from "@mui/material";
+import Button from "@mui/material/Button";
 
 export default class Friend extends Component {
-    render() {
-      return(
-        <div>
-            <UserInfo />
-            <UserInfo />
-            <Box
-              component="form"
-              noValidate
-              onSubmit={this.handleSubmit}
-              sx={{ mt: 3 }}>
-                <TextField
-                    name="user"
-                    // required
-                    fullWidth
-                    id="user"
-                    label="New frinend"
-                //   autoFocus
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                    Add
-                </Button>
-              </Box>
-        </div>
-      );
-    }
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Typography sx={{ fontSize: 25 }} color="text.first">
+          {this.props.userInfo.username}
+        </Typography>
+        <Typography sx={{ fontSize: 20 }} color="text.secondary">
+          {this.props.userInfo.company.catchPhrase}
+        </Typography>
+        <Button type="submit" variant="outlined">
+          Remove
+        </Button>
+      </div>
+    );
+  }
 }

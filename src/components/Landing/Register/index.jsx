@@ -9,7 +9,7 @@ import {
   Box,
   // Typography,
 } from "@mui/material";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 // import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 export class Register extends Component {
