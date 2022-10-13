@@ -13,8 +13,6 @@ import { Navigate } from "react-router-dom";
 // import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import store from "../../../redux/store";
 
-
-
 export class Login extends Component {
   constructor(props) {
     super(props);
@@ -30,35 +28,37 @@ export class Login extends Component {
     const data = new FormData(event.currentTarget);
     // console.log(data.get("username"))
     // console.log(data.get("login_password"))
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((json) => {
-        // get all users
-        store.dispatch({ type: "getAllUser", data: json });
-        // get array of objects(user info)
-        json.forEach((user) => {
-          if (
-            user.username == data.get("username") &&
-            data.get("login_password") == user.address.street
-          ) {
-            // console.log("Login successfully");
-            // get current user
-            store.dispatch({ type: "getUser", data: user });
-            // get friend users
-            const curId = user.id;
-            let friendIds = new Array(3);
-            for (var i = 1; i <= 3; i++) {
-              if (curId + i == 10) {
-                friendIds[i-1] = 10;
-              } else {
-                friendIds[i-1] = (curId + i) % 10;
-              }
-            }
-            store.dispatch({ type: "getFriendUserId", data: friendIds });
-            this.setState({ login: true });
+    // fetch("https://jsonplaceholder.typicode.com/users")
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    // get all users
+    // store.dispatch({ type: "getAllUser", data: json });
+    // get array of objects(user info)
+    // json.forEach((user) => {
+    store.getState().userReducer.allUsers.forEach((user) => {
+      if (
+        user.username == data.get("username") &&
+        data.get("login_password") == user.address.street
+      ) {
+        // console.log("Login successfully");
+        // get current user
+        store.dispatch({ type: "getUser", data: user });
+        // get friend users
+        const curId = user.id;
+        let friendIds = new Array(3);
+        for (var i = 1; i <= 3; i++) {
+          if (curId + i == 10) {
+            friendIds[i - 1] = 10;
+          } else {
+            friendIds[i - 1] = (curId + i) % 10;
           }
-        });
-      });
+        }
+        store.dispatch({ type: "getFriendUserId", data: friendIds });
+        this.setState({ login: true });
+        console.log(store.getState().userReducer.curUser)
+      }
+      // });
+    });
   }
 
   render() {

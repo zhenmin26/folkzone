@@ -3,16 +3,22 @@ import { Login } from "./Login";
 import { Register } from "./Register";
 import Grid from "@mui/material/Grid";
 import Label from "../Label";
+import store from "../../redux/store"
 
 export class Landing extends Component {
   constructor(props) {
     super(props);
-    // this.getAllUsers()
+    this.getAllUsers()
   }
 
-  // getAllUsers(){
-
-  // }
+  getAllUsers(){
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((json) => {
+        // get all users
+        store.dispatch({ type: "getAllUser", data: json });
+      });
+  }
 
   render() {
     return (

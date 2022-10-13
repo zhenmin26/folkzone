@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { TextField, Button, Box, Avatar, Typography, Grid } from "@mui/material";
 import store from "../../../redux/store";
+import avatarPic from "../../../static/images/avatar/1.jpg"
 
 export default class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username : store.getState().userReducer.curUser == null? "New user" :store.getState().userReducer.curUser.username,
-      status: store.getState().userReducer.curUser == null? "New status" :store.getState().userReducer.curUser.company.catchPhrase
+      username : store.getState().userReducer.curUser ? store.getState().userReducer.curUser.username : "New user",
+      status: store.getState().userReducer.curUser ? store.getState().userReducer.curUser.company.catchPhrase : "New status"
     }
   }
 
@@ -25,7 +26,7 @@ export default class User extends Component {
       <div>
         <Grid>
           {/* User information */}
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt={this.state.username} src={avatarPic} />
           <Typography sx={{ fontSize: 25 }} color="text.first">
             {this.state.username}
           </Typography>

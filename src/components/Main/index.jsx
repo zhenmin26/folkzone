@@ -28,8 +28,8 @@ export default class Main extends Component {
       // cards: store.getState().postReducer.posts,
       length: 10,
       posts: store.getState().postReducer.posts,
-      allUsers: store.getState().userReducer.allUsers,
-      friendUserIds: store.getState().userReducer.friendUserIds,
+      allUsers: store.getState().userReducer.allUsers || [],
+      friendUserIds: store.getState().userReducer.friendUserIds || [],
     };
   }
 
@@ -74,33 +74,34 @@ export default class Main extends Component {
     });
   };
 
-  handleSubmit(event){
+  handleSubmit(event) {
     event.preventDefault();
     // get new friend username
     const data = new FormData(event.currentTarget);
-    console.log(data.get("friend"))
-    this.state.allUsers.forEach(user => {
-      if(user.username === data.get("friend")){
-        store.dispatch({type:"addFriend", data:user.id})
+    console.log(data.get("friend"));
+    this.state.allUsers.forEach((user) => {
+      if (user.username === data.get("friend")) {
+        store.dispatch({ type: "addFriend", data: user.id });
         this.setState({
-          friendUserIds: store.getState().userReducer.friendUserIds
-        })
+          friendUserIds: store.getState().userReducer.friendUserIds,
+        });
       }
     });
   }
 
-  onChangeState(new_state){
-    this.setState(new_state)
+  onChangeState(new_state) {
+    this.setState(new_state);
   }
 
   render() {
     // console.log("main")
     return (
       <div>
-        <div>
-          <Link to="/">Log out</Link>
-          <Link to="/profile">Profile</Link>
-        </div>
+        {/* <Link to="/">Log out</Link> */}
+        <Button variant="text" href="/">Log out</Button>
+        {/* <Link to="/profile">Profile</Link> */}
+        <Button variant="text" href="/profile">Profile</Button>
+
         <Grid container xs={12} spacing={5}>
           <Grid item xs={3}>
             {/* user info */}
@@ -108,14 +109,16 @@ export default class Main extends Component {
               <User />
             </Grid>
             {/* frinds */}
-            <Box
-            component="form"
-            onSubmit={this.handleSubmit.bind(this)}
-            >
+            <Box component="form" onSubmit={this.handleSubmit.bind(this)}>
               <Grid>
                 {this.state.allUsers.map((user) => {
                   if (this.state.friendUserIds.includes(user.id)) {
-                    return <Friend userInfo={user} onRemoveFriend={this.onChangeState.bind(this)}/>;
+                    return (
+                      <Friend
+                        userInfo={user}
+                        onRemoveFriend={this.onChangeState.bind(this)}
+                      />
+                    );
                   }
                 })}
               </Grid>

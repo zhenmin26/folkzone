@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Main from "../Main";
-import { Link } from "react-router-dom";
+// import Main from "../Main";
+// import { Link } from "react-router-dom";
 import Label from "../Label";
 import {
   Button,
@@ -12,13 +12,14 @@ import {
   Box,
   Divider,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import store from "../../redux/store"
 
 export class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "demo",
+      username: store.getState().userReducer.curUser || "demo",
       email: "harry@hogwards.com",
       phone: "123-123-1234",
       zipcode: "12345",
@@ -103,10 +104,11 @@ export class Profile extends Component {
     return (
       <div>
         <Grid justifyContent="center" alignItems="center">
-          <ArrowBackIcon />
+          {/* <ArrowBackIcon />
           <Link to="/main" element={<Main />}>
             Go to main page
-          </Link>
+          </Link> */}
+          <Button variant="text" href="/main">Go to main page</Button>
         </Grid>
         <Grid container xs={12}>
           <Grid item xs={6}>
