@@ -79,12 +79,6 @@ export class Login extends Component {
               alignItems: "center",
             }}
           >
-            {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar> */}
-            {/* <Typography component="h1" variant="h5">
-              Sign in
-            </Typography> */}
             <Grid container spacing={2}>
               <TextField
                 margin="normal"

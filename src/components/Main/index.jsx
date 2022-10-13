@@ -3,10 +3,11 @@ import User from "./User";
 import Label from "../Label";
 import Friend from "./Friend";
 import NewPost from "./NewPost";
-import SearchBar from "./SearchBar";
+// import SearchBar from "./SearchBar/";
+import SearchIcon from "@mui/icons-material/Search";
 import Post from "./Post";
 import {
-  Typography,
+  // Typography,
   Stack,
   Divider,
   Grid,
@@ -17,7 +18,7 @@ import {
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import store from "../../redux/store";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 export default class Main extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ export default class Main extends Component {
       posts: store.getState().postReducer.posts,
       allUsers: store.getState().userReducer.allUsers || [],
       friendUserIds: store.getState().userReducer.friendUserIds || [],
+      searchValue: "",
     };
   }
 
@@ -89,6 +91,34 @@ export default class Main extends Component {
     });
   }
 
+  handleSearch(event) {
+    event.preventDefault();
+    // get new friend username
+    const data = new FormData(event.currentTarget);
+    const search_value = data.get("search");
+    // console.log(data.get("search"));
+    if(search_value === ""){
+      this.setState({
+        show_cards: [1, 2, 3]
+      })
+    }
+    else{
+      let shows = []
+      store.getState().postReducer.posts.forEach((post) => {
+        if (
+          post.author.indexOf(search_value) !== -1 ||
+          post.body.indexOf(search_value) !== -1 ||
+          post.title.indexOf(search_value) !== -1
+        ) {
+          shows.push(post.id)
+        }
+      });
+      this.setState({
+        show_cards: shows
+      })
+    }
+  }
+
   onChangeState(new_state) {
     this.setState(new_state);
   }
@@ -98,9 +128,13 @@ export default class Main extends Component {
     return (
       <div>
         {/* <Link to="/">Log out</Link> */}
-        <Button variant="text" href="/">Log out</Button>
+        <Button variant="text" href="/">
+          Log out
+        </Button>
         {/* <Link to="/profile">Profile</Link> */}
-        <Button variant="text" href="/profile">Profile</Button>
+        <Button variant="text" href="/profile">
+          Profile
+        </Button>
 
         <Grid container xs={12} spacing={5}>
           <Grid item xs={3}>
@@ -150,11 +184,31 @@ export default class Main extends Component {
             </Grid>
             {/* Search bar */}
             <Grid container>
-              <Grid item columns={3}>
+              {/* <Grid item columns={3}>
                 <Typography>Search here</Typography>
-              </Grid>
+              </Grid> */}
               <Grid item columns={7}>
-                <SearchBar />
+                {/* <SearchBar onSearch={this.onSearchPost.bind(this)}/> */}
+                <Box component="form" onSubmit={this.handleSearch.bind(this)}>
+                  <TextField
+                    margin="normal"
+                    fullWidth
+                    id="search"
+                    label="Search post"
+                    name="search"
+                    onChange={(event)=>{
+                      // console.log(event.target.value)
+                      if(event.target.value === ""){
+                        this.setState({
+                          show_cards: [1,2,3]
+                        })
+                      }
+                    }}
+                  />
+                  <Button type="submit">
+                    <SearchIcon />
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
             {/* Post area */}
