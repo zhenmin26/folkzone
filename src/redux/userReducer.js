@@ -35,6 +35,11 @@ export default function userReducer(preState = initState, action) {
       console.log(preState.friendUserIds)
       return preState;
 
+    case "addFriend":
+      preState.friendUserIds.push(data);
+      console.log(preState.friendUserIds)
+      return preState
+
     case "changeStatus":
       // console.log("changeStatus");
       preState.userStatus = data;

@@ -5,7 +5,15 @@ import Friend from "./Friend";
 import NewPost from "./NewPost";
 import SearchBar from "./SearchBar";
 import Post from "./Post";
-import { Typography, Stack, Divider, Grid } from "@mui/material";
+import {
+  Typography,
+  Stack,
+  Divider,
+  Grid,
+  TextField,
+  Box,
+  Button,
+} from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import store from "../../redux/store";
@@ -21,11 +29,11 @@ export default class Main extends Component {
       length: 10,
       posts: store.getState().postReducer.posts,
       allUsers: store.getState().userReducer.allUsers,
-      friendUserIds:  store.getState().userReducer.friendUserIds
+      friendUserIds: store.getState().userReducer.friendUserIds,
     };
   }
 
-  componentDidMount;
+  // componentDidMount;
 
   onClickBack = () => {
     // console.log("back")
@@ -66,6 +74,25 @@ export default class Main extends Component {
     });
   };
 
+  handleSubmit(event){
+    event.preventDefault();
+    // get new friend username
+    const data = new FormData(event.currentTarget);
+    console.log(data.get("friend"))
+    this.state.allUsers.forEach(user => {
+      if(user.username === data.get("friend")){
+        store.dispatch({type:"addFriend", data:user.id})
+        this.setState({
+          friendUserIds: store.getState().userReducer.friendUserIds
+        })
+      }
+    });
+  }
+
+  onChangeState(new_state){
+    this.setState(new_state)
+  }
+
   render() {
     // console.log("main")
     return (
@@ -81,15 +108,33 @@ export default class Main extends Component {
               <User />
             </Grid>
             {/* frinds */}
-            <Grid>
-              {
-                this.state.allUsers.map((user)=>{
-                    if(this.state.friendUserIds.includes(user.id)){
-                      return <Friend userInfo={user}/>
-                    }
-                })
-              }
-            </Grid>
+            <Box
+            component="form"
+            onSubmit={this.handleSubmit.bind(this)}
+            >
+              <Grid>
+                {this.state.allUsers.map((user) => {
+                  if (this.state.friendUserIds.includes(user.id)) {
+                    return <Friend userInfo={user} onRemoveFriend={this.onChangeState.bind(this)}/>;
+                  }
+                })}
+              </Grid>
+              <TextField
+                name="friend"
+                // required
+                id="friend"
+                label="New Friend"
+                fullWidth
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                fullWidth
+              >
+                Add
+              </Button>
+            </Box>
           </Grid>
           <Grid item xs={8}>
             <Grid container spacing={1}>

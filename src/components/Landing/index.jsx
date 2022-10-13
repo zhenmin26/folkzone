@@ -7,7 +7,12 @@ import Label from "../Label";
 export class Landing extends Component {
   constructor(props) {
     super(props);
+    // this.getAllUsers()
   }
+
+  // getAllUsers(){
+
+  // }
 
   render() {
     return (
