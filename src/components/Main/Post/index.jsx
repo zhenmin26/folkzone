@@ -36,7 +36,7 @@ export default class Post extends Component {
           <CardContent sx={{ flexGrow: 1 }}>
             <Typography gutterBottom variant="h5" component="h2">
               {/* Heading */}
-              {this.props.cur_post.id}-{this.props.cur_post.title}
+              {this.props.cur_post.title} - by {this.props.cur_post.author}
               {/* {this.state.posts.map((post) => {
                 if (post.id === this.state.index) {
                   return post.title;

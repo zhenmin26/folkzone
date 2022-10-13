@@ -4,9 +4,9 @@ import Button from "@mui/material/Button";
 import store from "../../../redux/store";
 
 export default class Friend extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   handleClick() {
     // console.log("user click remove")
