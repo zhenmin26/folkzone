@@ -17,7 +17,7 @@ export default class Friend extends Component {
     if (indexOfRemovedFriend > -1) {
       allFriend.splice(indexOfRemovedFriend, 1);
     }
-    console.log(allFriend);
+    // console.log(allFriend);
     store.dispatch({ type: "getFriendUserId", data: allFriend });
     localStorage.setItem("friendUserIds", JSON.stringify(allFriend));
     return allFriend;
@@ -46,7 +46,7 @@ export default class Friend extends Component {
                 <Grid item>
                   <Avatar
                     alt={this.props.userInfo.username}
-                    src="/static/images/avatar/1.jpg"
+                    src="https://source.unsplash.com/random"
                   />
                 </Grid>
                 <Grid item>
@@ -75,7 +75,7 @@ export default class Friend extends Component {
                 type="submit"
                 variant="outlined"
                 onClick={() => {
-                  console.log("remove");
+                  // console.log("remove");
                   this.props.onRemoveFriend(this.handleClick.bind(this));
                 }}
               >

@@ -14,7 +14,7 @@ import {
   Container,
 } from "@mui/material";
 // import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import store from "../../redux/store";
+// import store from "../../redux/store";
 import { Link } from "react-router-dom";
 
 export class Profile extends Component {
@@ -32,6 +32,7 @@ export class Profile extends Component {
         "harry@hogwards.com",
       phone: "123-123-1234",
       zipcode: "12345",
+      password: "123456",
       usernameErrorText: "", // cannot be empty
       phoneErrorText: "",
       emailErrorText: "",
@@ -113,6 +114,9 @@ export class Profile extends Component {
         this.setState({ zipcodeErrorText: "Invalid format" });
       }
     }
+    if(data.get("password") != ""){
+      this.setState({ password: data.get("password")});
+    }
   }
 
   render() {
@@ -134,7 +138,7 @@ export class Profile extends Component {
               alignItems="center"
               spacing={3}
             >
-              <Grid item><Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /></Grid>
+              <Grid item><Avatar alt="Remy Sharp" src="https://source.unsplash.com/random" /></Grid>
               <Grid item><Button
                 variant="outlined"
                 aria-label="upload picture"
@@ -171,6 +175,9 @@ export class Profile extends Component {
                 </Typography>
                 <Typography sx={{ fontSize: 25 }} color="text.secondary">
                   Zipcode: {this.state.zipcode}
+                </Typography>
+                <Typography sx={{ fontSize: 25 }} color="text.secondary">
+                  Password: {this.state.password.replace(/./g, "*")}
                 </Typography>
               </CardContent>
             </Grid>

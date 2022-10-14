@@ -25,7 +25,7 @@ export class Landing extends Component {
   }
 
   getAllPosts(){
-    console.log("get posts")
+    // console.log("get posts")
     const posts = [
       {
         "author": "Eliseo",

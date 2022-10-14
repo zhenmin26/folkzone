@@ -146,7 +146,7 @@ export class Register extends Component {
         "company" :{"catchPhrase": "Happy",}
       }
       // console.log(new_user)
-      console.log("1")
+      // console.log("1")
       localStorage.setItem("curUser", JSON.stringify(new_user))
       store.dispatch({type: "getUser", data: new_user})
     } else if (data.get("password") !== data.get("confirmPassword")) {

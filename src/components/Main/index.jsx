@@ -35,6 +35,7 @@ export default class Main extends Component {
       // cards: store.getState().postReducer.posts,
       length: 10,
       posts: store.getState().postReducer.posts,
+      curUser: store.getState().userReducer.curUser,
       allUsers:
         // JSON.parse(localStorage.getItem("allUsers")) ||
         store.getState().userReducer.allUsers || [],
@@ -114,8 +115,7 @@ export default class Main extends Component {
       store.getState().postReducer.posts.forEach((post) => {
         if (
           post.author.indexOf(search_value) !== -1 ||
-          post.body.indexOf(search_value) !== -1 ||
-          post.title.indexOf(search_value) !== -1
+          post.body.indexOf(search_value) !== -1
         ) {
           shows.push(post.id);
         }
@@ -176,9 +176,9 @@ export default class Main extends Component {
                 <Grid>
                   {this.state.allUsers.map((user) => {
                     // console.log("333")
-                    console.log(
-                      JSON.parse(localStorage.getItem("friendUserIds"))
-                    );
+                    // console.log(
+                    //   JSON.parse(localStorage.getItem("friendUserIds"))
+                    // );
                     if (
                       JSON.parse(
                         localStorage.getItem("friendUserIds")
@@ -295,7 +295,7 @@ export default class Main extends Component {
                     {this.state.show_cards.map((card_index) => {
                       for (var i = 0; i < this.state.posts.length; i++) {
                         if (this.state.posts[i].id === card_index) {
-                          return <Post cur_post={this.state.posts[i]} />;
+                          return <Post cur_post={this.state.posts[i]} author={this.state.curUser}/>;
                         }
                       }
                     })}

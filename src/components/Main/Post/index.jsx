@@ -32,7 +32,7 @@ export default class Post extends Component {
               {this.props.cur_post.id} - 
               {this.props.cur_post.title}
             </Typography>
-            <Typography variant="h6">by {this.props.cur_post.author}</Typography>
+            <Typography variant="h6">by {this.props.author.username}</Typography>
             <Typography variant="h6">posted on {this.props.cur_post.date}</Typography>
             <Typography>
               {/* This is a media card. You can use this section to describe the
