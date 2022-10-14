@@ -18,6 +18,8 @@ export class Login extends Component {
     super(props);
     this.state = {
       login: false,
+      usernameErrorText: "",
+      passwordErrorText: "",
     };
   }
 
@@ -26,21 +28,17 @@ export class Login extends Component {
     event.preventDefault();
     // get user data
     const data = new FormData(event.currentTarget);
-    // console.log(data.get("username"))
-    // console.log(data.get("login_password"))
-    // fetch("https://jsonplaceholder.typicode.com/users")
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    // get all users
-    // store.dispatch({ type: "getAllUser", data: json });
-    // get array of objects(user info)
-    // json.forEach((user) => {
     store.getState().userReducer.allUsers.forEach((user) => {
+      if(data.get("username") === ""){
+        this.setState({ usernameErrorText: "Required field" });
+        return;
+      }
       if (
-        user.username == data.get("username") &&
+        user.username === data.get("username") &&
         data.get("login_password") == user.address.street
       ) {
         // console.log("Login successfully");
+        localStorage.setItem("curUser", JSON.stringify(user));
         // get current user
         store.dispatch({ type: "getUser", data: user });
         // get friend users
@@ -55,9 +53,11 @@ export class Login extends Component {
         }
         store.dispatch({ type: "getFriendUserId", data: friendIds });
         this.setState({ login: true });
-        console.log(store.getState().userReducer.curUser)
+        localStorage.setItem("login", true);
       }
-      // });
+      else{
+        this.setState({ passwordErrorText: "Wrong password" });
+      }
     });
   }
 
@@ -89,6 +89,10 @@ export class Login extends Component {
                 name="username"
                 autoComplete="email"
                 autoFocus
+                helperText={this.state.usernameErrorText}
+                error={
+                  this.state.usernameErrorText === "Required field"
+                }
               />
               <TextField
                 margin="normal"
@@ -98,7 +102,11 @@ export class Login extends Component {
                 label="Password"
                 type="password"
                 id="login_password"
-                // autoComplete="current-password"
+                helperText={this.state.passwordErrorText}
+                error={
+                  this.state.passwordErrorText === "Wrong password" ||
+                  this.state.passwordErrorText === "Required field"
+                }
               />
               <Button
                 type="login"

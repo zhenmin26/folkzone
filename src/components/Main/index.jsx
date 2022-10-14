@@ -14,14 +14,20 @@ import {
   TextField,
   Box,
   Button,
+  Container,
+  Typography,
+  Chip,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import store from "../../redux/store";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+// import { ConstructionOutlined } from "@mui/icons-material";
+// import { Navigate } from "react-router-dom";
 
 export default class Main extends Component {
   constructor(props) {
+    // console.log(store.getState().userReducer.allUsers)
     super(props);
     this.state = {
       // startOfCards: 0,
@@ -29,13 +35,14 @@ export default class Main extends Component {
       // cards: store.getState().postReducer.posts,
       length: 10,
       posts: store.getState().postReducer.posts,
-      allUsers: store.getState().userReducer.allUsers || [],
+      allUsers:
+        // JSON.parse(localStorage.getItem("allUsers")) ||
+        store.getState().userReducer.allUsers || [],
       friendUserIds: store.getState().userReducer.friendUserIds || [],
       searchValue: "",
+      friendInput: "",
     };
   }
-
-  // componentDidMount;
 
   onClickBack = () => {
     // console.log("back")
@@ -80,12 +87,13 @@ export default class Main extends Component {
     event.preventDefault();
     // get new friend username
     const data = new FormData(event.currentTarget);
-    console.log(data.get("friend"));
+    // console.log(data.get("friend"));
     this.state.allUsers.forEach((user) => {
       if (user.username === data.get("friend")) {
         store.dispatch({ type: "addFriend", data: user.id });
         this.setState({
           friendUserIds: store.getState().userReducer.friendUserIds,
+          friendInput: "",
         });
       }
     });
@@ -97,25 +105,24 @@ export default class Main extends Component {
     const data = new FormData(event.currentTarget);
     const search_value = data.get("search");
     // console.log(data.get("search"));
-    if(search_value === ""){
+    if (search_value === "") {
       this.setState({
-        show_cards: [1, 2, 3]
-      })
-    }
-    else{
-      let shows = []
+        show_cards: [1, 2, 3],
+      });
+    } else {
+      let shows = [];
       store.getState().postReducer.posts.forEach((post) => {
         if (
           post.author.indexOf(search_value) !== -1 ||
           post.body.indexOf(search_value) !== -1 ||
           post.title.indexOf(search_value) !== -1
         ) {
-          shows.push(post.id)
+          shows.push(post.id);
         }
       });
       this.setState({
-        show_cards: shows
-      })
+        show_cards: shows,
+      });
     }
   }
 
@@ -124,133 +131,198 @@ export default class Main extends Component {
   }
 
   render() {
-    // console.log("main")
-    return (
-      <div>
-        {/* <Link to="/">Log out</Link> */}
-        <Button variant="text" href="/">
-          Log out
-        </Button>
-        {/* <Link to="/profile">Profile</Link> */}
-        <Button variant="text" href="/profile">
-          Profile
-        </Button>
-
-        <Grid container xs={12} spacing={5}>
-          <Grid item xs={3}>
-            {/* user info */}
-            <Grid>
-              <User />
-            </Grid>
-            {/* frinds */}
-            <Box component="form" onSubmit={this.handleSubmit.bind(this)}>
-              <Grid>
-                {this.state.allUsers.map((user) => {
-                  if (this.state.friendUserIds.includes(user.id)) {
-                    return (
-                      <Friend
-                        userInfo={user}
-                        onRemoveFriend={this.onChangeState.bind(this)}
-                      />
-                    );
-                  }
-                })}
-              </Grid>
-              <TextField
-                name="friend"
-                // required
-                id="friend"
-                label="New Friend"
-                fullWidth
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                fullWidth
-              >
-                Add
-              </Button>
-            </Box>
-          </Grid>
-          <Grid item xs={8}>
-            <Grid container spacing={1}>
-              <Grid item columns={6}>
-                <NewPost />
-              </Grid>
-              <Grid item columns={6}>
-                <Label />
-              </Grid>
-            </Grid>
-            {/* Search bar */}
-            <Grid container>
-              {/* <Grid item columns={3}>
-                <Typography>Search here</Typography>
-              </Grid> */}
-              <Grid item columns={7}>
-                {/* <SearchBar onSearch={this.onSearchPost.bind(this)}/> */}
-                <Box component="form" onSubmit={this.handleSearch.bind(this)}>
-                  <TextField
-                    margin="normal"
-                    fullWidth
-                    id="search"
-                    label="Search post"
-                    name="search"
-                    onChange={(event)=>{
-                      // console.log(event.target.value)
-                      if(event.target.value === ""){
-                        this.setState({
-                          show_cards: [1,2,3]
-                        })
-                      }
-                    }}
-                  />
-                  <Button type="submit">
-                    <SearchIcon />
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-            {/* Post area */}
+    if (JSON.parse(localStorage.getItem("login"))) {
+      // console.log("re-render main");
+      return (
+        <div>
+          <Button
+            variant="text"
+            onClick={() => {
+              // console.log("user log out")
+              localStorage.setItem("login", false);
+              localStorage.setItem("curUser", null);
+              localStorage.setItem("friendUserIds", JSON.stringify([]));
+            }}
+          >
+            {/* Log out */}
+            <Link to="/">Log out</Link>
+          </Button>
+          <Button variant="text">
+            {/* Profile */}
+            <Link to="/profile">Profile</Link>
+          </Button>
+          {/* <Container> */}
+          <Grid container spacing={2}>
             <Grid
+              item
+              xs={3}
               container
-              xs={9}
-              md={12}
-              justifyContent="center"
-              alignItems="center"
+              direction="column"
+              justifyContent="flex-start"
+              alignItems="flex-start"
             >
-              <Grid item md={0.5}>
-                <ArrowBackIosIcon
-                  fontSize="large"
-                  onClick={this.onClickBack.bind(this)}
-                />
+              {/* user info */}
+              <Grid>
+                <User />
+                <Divider>
+                  <Typography variant="h5" color="primary">
+                    Followers
+                  </Typography>
+                </Divider>
               </Grid>
-              <Grid item md={11}>
-                <Stack
-                  direction="row"
-                  divider={<Divider orientation="vertical" flexItem />}
-                  spacing={2}
-                >
-                  {/* {this.state.show_cards.map((show_card) => <Post key={show_card} />)} */}
-                  {this.state.show_cards.map((card_index) => {
-                    for (var i = 0; i < this.state.posts.length; i++) {
-                      if (this.state.posts[i].id === card_index) {
-                        return <Post cur_post={this.state.posts[i]} />;
-                      }
+
+              {/* frinds */}
+              <Box component="form" onSubmit={this.handleSubmit.bind(this)}>
+                <Grid>
+                  {this.state.allUsers.map((user) => {
+                    // console.log("333")
+                    console.log(
+                      JSON.parse(localStorage.getItem("friendUserIds"))
+                    );
+                    if (
+                      JSON.parse(
+                        localStorage.getItem("friendUserIds")
+                      ).includes(user.id)
+                    ) {
+                      return (
+                        <Grid spacing={2} direction="column" container>
+                          <Grid item>
+                            <Friend
+                              userInfo={user}
+                              onRemoveFriend={this.onChangeState.bind(this)}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Divider />
+                          </Grid>
+                        </Grid>
+                      );
                     }
                   })}
-                </Stack>
-              </Grid>
-              <Grid item md={0.5}>
-                <ArrowForwardIosIcon
-                  fontSize="large"
-                  onClick={this.onClickForward.bind(this)}
+                </Grid>
+                <TextField
+                  name="friend"
+                  // required
+                  id="friend"
+                  label="New Friend"
+                  fullWidth
+                  value={this.state.friendInput}
+                  onChange={(e) => {
+                    this.setState({ friendInput: e.target.value });
+                  }}
                 />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  fullWidth
+                >
+                  Add
+                </Button>
+              </Box>
+            </Grid>
+            <Grid item xs={9}>
+              <Grid container xs={12} spacing={2}>
+                <Grid item xs={5}>
+                  <NewPost />
+                </Grid>
+                <Grid item xs={7}>
+                  <Label />
+                </Grid>
+              </Grid>
+              {/* Search bar */}
+              <Grid>
+                {/* <Grid item columns={3}>
+                  <Typography>Search here</Typography>
+                </Grid> */}
+
+                {/* <SearchBar onSearch={this.onSearchPost.bind(this)}/> */}
+                <Box component="form" onSubmit={this.handleSearch.bind(this)}>
+                  <Grid
+                    container
+                    xs={12}
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Grid item xs={9}>
+                      <TextField
+                        margin="normal"
+                        // fullWidth
+                        id="search"
+                        label="Search post"
+                        name="search"
+                        fullWidth
+                        // sx={{ width: 830 }}
+                        onChange={(event) => {
+                          // console.log(event.target.value)
+                          if (event.target.value === "") {
+                            this.setState({
+                              show_cards: [1, 2, 3],
+                            });
+                          }
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Button type="submit">
+                        <SearchIcon />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+              {/* Post area */}
+              <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                xs={12}
+              >
+                <Grid item>
+                  <ArrowBackIosIcon
+                    fontSize="large"
+                    onClick={this.onClickBack.bind(this)}
+                  />
+                </Grid>
+                <Grid item xs={11}>
+                  <Stack
+                    direction="row"
+                    divider={<Divider orientation="vertical" flexItem />}
+                    spacing={2}
+                  >
+                    {/* {this.state.show_cards.map((show_card) => <Post key={show_card} />)} */}
+                    {this.state.show_cards.map((card_index) => {
+                      for (var i = 0; i < this.state.posts.length; i++) {
+                        if (this.state.posts[i].id === card_index) {
+                          return <Post cur_post={this.state.posts[i]} />;
+                        }
+                      }
+                    })}
+                  </Stack>
+                </Grid>
+                <Grid item>
+                  <ArrowForwardIosIcon
+                    fontSize="large"
+                    onClick={this.onClickForward.bind(this)}
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </div>
-    );
+          {/* </Container> */}
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          Please log in first
+          <Button variant="text">
+            {/* Profile */}
+            <Link to="/">Go to landing page</Link>
+          </Button>
+        </div>
+      );
+    }
   }
 }

@@ -16,20 +16,13 @@ export default class Post extends Component {
     // console.log("index in post: " + props.index)
   }
 
-  componentDidUpdate(){
-    this.render()
-  }
-
   render() {
     return (
       <div>
         <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
           <CardMedia
             component="img"
-            sx={{
-              // 16:9
-              pt: "10%",
-            }}
+            sx={{ width: 200, height: 200 }}
             image="https://source.unsplash.com/random"
             alt="random"
           />
@@ -37,22 +30,14 @@ export default class Post extends Component {
             <Typography gutterBottom variant="h5" component="h2">
               {/* Heading */}
               {this.props.cur_post.id} - 
-              {this.props.cur_post.title} - by {this.props.cur_post.author}
-              {/* {this.state.posts.map((post) => {
-                if (post.id === this.state.index) {
-                  return post.title;
-                }
-              })} */}
+              {this.props.cur_post.title}
             </Typography>
+            <Typography variant="h6">by {this.props.cur_post.author}</Typography>
+            <Typography variant="h6">posted on {this.props.cur_post.date}</Typography>
             <Typography>
               {/* This is a media card. You can use this section to describe the
               content. */}
               {this.props.cur_post.body}
-              {/* {this.state.posts.map((post) => {
-                if (post.id === this.state.index) {
-                  return post.body;
-                }
-              })} */}
             </Typography>
           </CardContent>
           <CardActions>

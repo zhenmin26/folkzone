@@ -10,6 +10,7 @@ import {
   // Typography,
 } from "@mui/material";
 import { Navigate } from "react-router-dom";
+import store from "../../../redux/store"
 // import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 export class Register extends Component {
@@ -69,6 +70,9 @@ export class Register extends Component {
     if (age < 18) {
       this.setState({ brithdateErrorText: "Age under 18" });
     }
+    else{
+      this.setState({ brithdateErrorText: "" });
+    }
   }
 
   checkEmail(event) {
@@ -85,7 +89,7 @@ export class Register extends Component {
 
   checkZipcode = (event) => {
     // console.log("Checking zipcode");
-    let zipPattern = /[0-9]{5}$/;
+    let zipPattern = /^[0-9]{5}$/;
     if (zipPattern.test(event.target.value)) {
       this.setState({ zipcodeErrorText: "" });
     } else if (event.target.value === "") {
@@ -131,6 +135,20 @@ export class Register extends Component {
       data.get("password") === data.get("confirmPassword")
     ) {
       this.setState({ login: true });
+      localStorage.setItem("login", true)
+      let new_user = {
+        "username": data.get("name"),
+        "phone": data.get("phone"),
+        "birthdate": data.get("birthdate"),
+        "email": data.get("email"),
+        "zipcode": data.get("zipcode") === "",
+        "password": data.get("password"),
+        "company" :{"catchPhrase": "Happy",}
+      }
+      // console.log(new_user)
+      console.log("1")
+      localStorage.setItem("curUser", JSON.stringify(new_user))
+      store.dispatch({type: "getUser", data: new_user})
     } else if (data.get("password") !== data.get("confirmPassword")) {
       this.setState({ pwdErrorText: "Password does not match" });
     } else {
