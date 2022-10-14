@@ -23,13 +23,26 @@ export class Login extends Component {
     };
   }
 
+  randomDate(start, end) {
+    var d = new Date(
+        start.getTime() + Math.random() * (end.getTime() - start.getTime())
+      ),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+    // return [month, day, year].join("/");
+    return [year, month, day].join("-");
+  }
+
   handleSubmit(event) {
     // console.log("login in")
     event.preventDefault();
     // get user data
     const data = new FormData(event.currentTarget);
     store.getState().userReducer.allUsers.forEach((user) => {
-      if(data.get("username") === ""){
+      if (data.get("username") === "") {
         this.setState({ usernameErrorText: "Required field" });
         return;
       }
@@ -51,11 +64,29 @@ export class Login extends Component {
             friendIds[i - 1] = (curId + i) % 10;
           }
         }
+        let allPosts = store.getState().postReducer.allPosts;
+        let posts;
+        for (var j = 0; j < allPosts.length; j += 10) {
+          if (allPosts[j].userId === user.id) {
+            posts = allPosts.slice(j, j + 10);
+            posts.forEach((post) => {
+              post.date = this.randomDate(new Date(2012, 0, 1), new Date());
+            });
+            // console.log(posts);
+            // sort posts by date
+            posts.sort(function (a, b) {
+              return new Date(b.date) - new Date(a.date);
+            });
+            // console.log("32222")
+            // console.log(posts)
+            store.dispatch({ type: "getPosts", data: posts });
+            break;
+          }
+        }
         store.dispatch({ type: "getFriendUserId", data: friendIds });
         this.setState({ login: true });
         localStorage.setItem("login", true);
-      }
-      else{
+      } else {
         this.setState({ passwordErrorText: "Wrong password" });
       }
     });
@@ -90,9 +121,7 @@ export class Login extends Component {
                 autoComplete="email"
                 autoFocus
                 helperText={this.state.usernameErrorText}
-                error={
-                  this.state.usernameErrorText === "Required field"
-                }
+                error={this.state.usernameErrorText === "Required field"}
               />
               <TextField
                 margin="normal"

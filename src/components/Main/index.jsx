@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import User from "./User";
 import Label from "../Label";
 import Friend from "./Friend";
-import NewPost from "./NewPost";
+// import NewPost from "./NewPost";
 // import SearchBar from "./SearchBar/";
 import SearchIcon from "@mui/icons-material/Search";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import Post from "./Post";
 import {
   // Typography,
@@ -14,14 +15,15 @@ import {
   TextField,
   Box,
   Button,
-  Container,
   Typography,
-  Chip,
+  IconButton,
+  Card,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import store from "../../redux/store";
 import { Link } from "react-router-dom";
+import { ConstructionOutlined } from "@mui/icons-material";
 // import { ConstructionOutlined } from "@mui/icons-material";
 // import { Navigate } from "react-router-dom";
 
@@ -42,7 +44,74 @@ export default class Main extends Component {
       friendUserIds: store.getState().userReducer.friendUserIds || [],
       searchValue: "",
       friendInput: "",
+      text: "",
     };
+    // this.onRefresh();
+  }
+
+  randomDate(start, end) {
+    var d = new Date(
+        start.getTime() + Math.random() * (end.getTime() - start.getTime())
+      ),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+    // return [month, day, year].join("/");
+    return [year, month, day].join("-");
+  }
+
+  onRefresh() {
+    // console.log("login in")
+    // get user data
+    let allUsers = localStorage.getItem("allUsers");
+    let curUser = localStorage.getItem("curUser")
+    // console.log(allUsers)
+    Array.from(allUsers).forEach((user) => {
+      const curId = curUser.id;
+      let friendIds = new Array(3);
+      for (var i = 1; i <= 3; i++) {
+        if (curId + i == 10) {
+          friendIds[i - 1] = 10;
+        } else {
+          friendIds[i - 1] = (curId + i) % 10;
+        }
+      }
+      this.setState({
+        friendUserIds: friendIds
+      })
+      let allPosts = Array.from(localStorage.getItem("allPosts"));
+      let posts;
+      for (var j = 0; j < allPosts.length; j += 10) {
+        if (allPosts[j].userId === user.id) {
+          posts = allPosts.slice(j, j + 10);
+          posts.forEach((post) => {
+            post.date = this.randomDate(new Date(2012, 0, 1), new Date());
+          });
+          // console.log(posts);
+          // sort posts by date
+          posts.sort(function (a, b) {
+            return new Date(b.date) - new Date(a.date);
+          });
+          // console.log("32222")
+          // console.log(posts)
+          store.dispatch({ type: "getPosts", data: posts });
+          this.setState({
+            posts: posts
+          })
+          break;
+        }
+      }
+    });
+  }
+
+  getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const day = today.getDay();
+    return [year, month, day].join("-");
   }
 
   onClickBack = () => {
@@ -84,6 +153,14 @@ export default class Main extends Component {
     });
   };
 
+  getDefaultState = () => {
+    return { text: "" };
+  };
+
+  handleCancel() {
+    this.setState(this.getDefaultState());
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     // get new friend username
@@ -111,8 +188,10 @@ export default class Main extends Component {
         show_cards: [1, 2, 3],
       });
     } else {
+      // console.log(this.state.posts)
+      let posts = JSON.parse(localStorage.getItem("posts"))
       let shows = [];
-      store.getState().postReducer.posts.forEach((post) => {
+      posts.forEach((post) => {
         if (
           post.author.indexOf(search_value) !== -1 ||
           post.body.indexOf(search_value) !== -1
@@ -128,6 +207,23 @@ export default class Main extends Component {
 
   onChangeState(new_state) {
     this.setState(new_state);
+  }
+
+  addPost(event) {
+    event.preventDefault();
+    // get new friend username
+    const data = new FormData(event.currentTarget);
+    // console.log(data.get("postContent"))
+    let new_posts = {
+      id: 101,
+      userId: this.state.curUser.id,
+      body: data.get("postContent"),
+      title: "new post",
+      date: this.getCurrentDate(),
+    };
+    this.setState({
+      posts: [new_posts].concat(this.state.posts),
+    });
   }
 
   render() {
@@ -224,7 +320,57 @@ export default class Main extends Component {
             <Grid item xs={9}>
               <Grid container xs={12} spacing={2}>
                 <Grid item xs={5}>
-                  <NewPost />
+                  {/* new post */}
+                  <div>
+                    <Box component="form" onSubmit={this.addPost.bind(this)}>
+                      <Grid
+                        container
+                        rowSpacing={1}
+                        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                      >
+                        <Grid item xs={6}>
+                          <Card>
+                            <IconButton
+                              color="primary"
+                              aria-label="upload picture"
+                              component="label"
+                            >
+                              <input hidden accept="image/*" type="file" />
+                              <PhotoCamera />
+                            </IconButton>
+                          </Card>
+                        </Grid>
+                        <Grid item xs="auto">
+                          <TextField
+                            id="postContent"
+                            name="postContent"
+                            multiline
+                            // defaultValue="Your post here"
+                            label="Post content"
+                            value={this.state.text}
+                            onChange={(event) => {
+                              this.setState({ text: event.target.value });
+                            }}
+                            fullWidth
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Button
+                            variant="outlined"
+                            onClick={this.handleCancel.bind(this)}
+                            fullWidth
+                          >
+                            Cancel
+                          </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Button variant="outlined" fullWidth type="submit">
+                            Post
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </div>
                 </Grid>
                 <Grid item xs={7}>
                   <Label />
@@ -292,10 +438,16 @@ export default class Main extends Component {
                     spacing={2}
                   >
                     {/* {this.state.show_cards.map((show_card) => <Post key={show_card} />)} */}
+                    {/* {this.state.show_cards.map((show_card) => <Post key={show_card} />)} */}
                     {this.state.show_cards.map((card_index) => {
                       for (var i = 0; i < this.state.posts.length; i++) {
-                        if (this.state.posts[i].id === card_index) {
-                          return <Post cur_post={this.state.posts[i]} author={this.state.curUser}/>;
+                        if (i === card_index - 1) {
+                          return (
+                            <Post
+                              cur_post={this.state.posts[i]}
+                              author={this.state.curUser}
+                            />
+                          );
                         }
                       }
                     })}

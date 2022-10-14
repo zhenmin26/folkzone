@@ -29,7 +29,7 @@ export default class User extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data.get("status"));
+    // console.log(data.get("status"));
     this.setState({
       status: data.get("status"),
     });
