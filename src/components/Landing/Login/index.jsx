@@ -17,7 +17,7 @@ export class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: false,
+      login: store.getState().userReducer.login,
       usernameErrorText: "",
       passwordErrorText: "",
     };
@@ -51,7 +51,7 @@ export class Login extends Component {
         data.get("login_password") == user.address.street
       ) {
         // console.log("Login successfully");
-        localStorage.setItem("curUser", JSON.stringify(user));
+        // localStorage.setItem("curUser", JSON.stringify(user));
         // get current user
         store.dispatch({ type: "getUser", data: user });
         // get friend users
@@ -77,15 +77,13 @@ export class Login extends Component {
             posts.sort(function (a, b) {
               return new Date(b.date) - new Date(a.date);
             });
-            // console.log("32222")
-            // console.log(posts)
             store.dispatch({ type: "getPosts", data: posts });
             break;
           }
         }
         store.dispatch({ type: "getFriendUserId", data: friendIds });
         this.setState({ login: true });
-        localStorage.setItem("login", true);
+        store.dispatch({ type: "changeLoginStatus", data: true})
       } else {
         this.setState({ passwordErrorText: "Wrong password" });
       }

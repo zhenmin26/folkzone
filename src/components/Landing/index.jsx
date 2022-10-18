@@ -19,8 +19,7 @@ export class Landing extends Component {
       .then((json) => {
         // get all users
         store.dispatch({ type: "getAllUser", data: json });
-        localStorage.setItem('allUsers', JSON.stringify(json));
-        localStorage.setItem('login', false)
+        store.dispatch({ type: "changeLoginStatus", data: false})
       });
   }
 
@@ -28,9 +27,8 @@ export class Landing extends Component {
     fetch("https://jsonplaceholder.typicode.com/posts")
       .then((response) => response.json())
       .then((json) => {
-        // get all users
+        // get all posts
         store.dispatch({ type: "getAllPost", data: json });
-        localStorage.setItem('allPosts', JSON.stringify(json));
       });
   }
 

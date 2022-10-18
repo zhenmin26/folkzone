@@ -14,15 +14,10 @@ import { render } from "@testing-library/react";
 
 export default class User extends Component {
   constructor(props) {
-    // console.log("2")
-    // console.log(JSON.parse(localStorage.getItem('curUser')))
     super(props);
     this.state = {
-      curUser: JSON.parse(localStorage.getItem("curUser")),
-      // username : store.getState().userReducer.curUser ? store.getState().userReducer.curUser.username : "New user",
-      username: JSON.parse(localStorage.getItem("curUser")).username,
-      // status: store.getState().userReducer.curUser ? store.getState().userReducer.curUser.company.catchPhrase : "New status"
-      status: JSON.parse(localStorage.getItem("curUser")).company.catchPhrase,
+      username : store.getState().userReducer.curUser ? store.getState().userReducer.curUser.username : "New user",
+      status: store.getState().userReducer.curUser ? store.getState().userReducer.curUser.company.catchPhrase : "New status"
     };
   }
 

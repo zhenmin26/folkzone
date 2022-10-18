@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import store from "../../../redux/store";
 
 import {
   Typography,

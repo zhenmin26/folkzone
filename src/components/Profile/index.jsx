@@ -16,6 +16,7 @@ import {
 // import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // import store from "../../redux/store";
 import { Link } from "react-router-dom";
+import store from "../../redux/store";
 
 export class Profile extends Component {
   constructor(props) {
@@ -23,13 +24,16 @@ export class Profile extends Component {
     // console.log()
     super(props);
     this.state = {
+      login: store.getState().userReducer.login,
       username:
         // JSON.parse(localStorage.getItem("curUser")).username ||
-        JSON.parse(localStorage.getItem("curUser")).username || "Harry",
+        // JSON.parse(localStorage.getItem("curUser")).username || "Harry",
+        store.getState().userReducer.curUser.username,
       email:
         // JSON.parse(localStorage.getItem("curUser")).email ||
-        JSON.parse(localStorage.getItem("curUser")).email ||
-        "harry@hogwards.com",
+        // JSON.parse(localStorage.getItem("curUser")).email ||
+        // "harry@hogwards.com",
+        store.getState().userReducer.curUser.email,
       phone: "123-123-1234",
       zipcode: "12345",
       password: "123456",
@@ -120,7 +124,7 @@ export class Profile extends Component {
   }
 
   render() {
-    if (JSON.parse(localStorage.getItem("login"))) {
+    if (this.state.login) {
       return (
         <Container>
           <Grid justifyContent="center" alignItems="center">

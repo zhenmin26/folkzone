@@ -86,15 +86,6 @@ export default function postReducer(preState = initState, action) {
     case "getPosts":
       preState.posts = data;
       return preState;
-      
-    case "addPost":
-      return preState;
-
-    case "editPost":
-      return preState;
-
-    case "commentPost":
-      return "hello div";
 
     default:
       return preState;

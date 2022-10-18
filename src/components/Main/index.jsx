@@ -23,30 +23,23 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import store from "../../redux/store";
 import { Link } from "react-router-dom";
-import { ConstructionOutlined } from "@mui/icons-material";
-// import { ConstructionOutlined } from "@mui/icons-material";
-// import { Navigate } from "react-router-dom";
 
 export default class Main extends Component {
   constructor(props) {
-    // console.log(store.getState().userReducer.allUsers)
+    // console.log(store.getState().userReducer)
     super(props);
     this.state = {
-      // startOfCards: 0,
+      login: store.getState().userReducer.login,
       show_cards: [1, 2, 3],
-      // cards: store.getState().postReducer.posts,
       length: 10,
       posts: store.getState().postReducer.posts,
       curUser: store.getState().userReducer.curUser,
-      allUsers:
-        // JSON.parse(localStorage.getItem("allUsers")) ||
-        store.getState().userReducer.allUsers || [],
-      friendUserIds: store.getState().userReducer.friendUserIds || [],
+      allUsers: store.getState().userReducer.allUsers,
+      friendUserIds: store.getState().userReducer.friendUserIds,
       searchValue: "",
       friendInput: "",
       text: "",
     };
-    // this.onRefresh();
   }
 
   randomDate(start, end) {
@@ -60,50 +53,6 @@ export default class Main extends Component {
     if (day.length < 2) day = "0" + day;
     // return [month, day, year].join("/");
     return [year, month, day].join("-");
-  }
-
-  onRefresh() {
-    // console.log("login in")
-    // get user data
-    let allUsers = localStorage.getItem("allUsers");
-    let curUser = localStorage.getItem("curUser")
-    // console.log(allUsers)
-    Array.from(allUsers).forEach((user) => {
-      const curId = curUser.id;
-      let friendIds = new Array(3);
-      for (var i = 1; i <= 3; i++) {
-        if (curId + i == 10) {
-          friendIds[i - 1] = 10;
-        } else {
-          friendIds[i - 1] = (curId + i) % 10;
-        }
-      }
-      this.setState({
-        friendUserIds: friendIds
-      })
-      let allPosts = Array.from(localStorage.getItem("allPosts"));
-      let posts;
-      for (var j = 0; j < allPosts.length; j += 10) {
-        if (allPosts[j].userId === user.id) {
-          posts = allPosts.slice(j, j + 10);
-          posts.forEach((post) => {
-            post.date = this.randomDate(new Date(2012, 0, 1), new Date());
-          });
-          // console.log(posts);
-          // sort posts by date
-          posts.sort(function (a, b) {
-            return new Date(b.date) - new Date(a.date);
-          });
-          // console.log("32222")
-          // console.log(posts)
-          store.dispatch({ type: "getPosts", data: posts });
-          this.setState({
-            posts: posts
-          })
-          break;
-        }
-      }
-    });
   }
 
   getCurrentDate() {
@@ -189,7 +138,7 @@ export default class Main extends Component {
       });
     } else {
       // console.log(this.state.posts)
-      let posts = JSON.parse(localStorage.getItem("posts"))
+      let posts = JSON.parse(localStorage.getItem("posts"));
       let shows = [];
       posts.forEach((post) => {
         if (
@@ -227,7 +176,7 @@ export default class Main extends Component {
   }
 
   render() {
-    if (JSON.parse(localStorage.getItem("login"))) {
+    if (this.state.login) {
       // console.log("re-render main");
       return (
         <div>
@@ -236,8 +185,8 @@ export default class Main extends Component {
             onClick={() => {
               // console.log("user log out")
               localStorage.setItem("login", false);
-              localStorage.setItem("curUser", null);
-              localStorage.setItem("friendUserIds", JSON.stringify([]));
+              // localStorage.setItem("curUser", null);
+              // localStorage.setItem("friendUserIds", JSON.stringify([]));
             }}
           >
             {/* Log out */}
@@ -270,30 +219,21 @@ export default class Main extends Component {
               {/* frinds */}
               <Box component="form" onSubmit={this.handleSubmit.bind(this)}>
                 <Grid>
-                  {this.state.allUsers.map((user) => {
-                    // console.log("333")
-                    // console.log(
-                    //   JSON.parse(localStorage.getItem("friendUserIds"))
-                    // );
-                    if (
-                      JSON.parse(
-                        localStorage.getItem("friendUserIds")
-                      ).includes(user.id)
-                    ) {
-                      return (
-                        <Grid spacing={2} direction="column" container>
-                          <Grid item>
-                            <Friend
-                              userInfo={user}
-                              onRemoveFriend={this.onChangeState.bind(this)}
-                            />
-                          </Grid>
-                          <Grid item>
-                            <Divider />
-                          </Grid>
+                  {this.state.friendUserIds.map((user) => {
+                    // console.log(userId)
+                    return (
+                      <Grid spacing={2} direction="column" container>
+                        <Grid item>
+                          <Friend
+                            userInfo={user}
+                            onRemoveFriend={this.onChangeState.bind(this)}
+                          />
                         </Grid>
-                      );
-                    }
+                        <Grid item>
+                          <Divider />
+                        </Grid>
+                      </Grid>
+                    );
                   })}
                 </Grid>
                 <TextField
