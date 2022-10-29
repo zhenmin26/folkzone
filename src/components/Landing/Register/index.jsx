@@ -134,8 +134,6 @@ export class Register extends Component {
       data.get("confirmPassword") !== "" &&
       data.get("password") === data.get("confirmPassword")
     ) {
-      this.setState({ login: true });
-      localStorage.setItem("login", true)
       let new_user = {
         "username": data.get("name"),
         "phone": data.get("phone"),
@@ -145,10 +143,11 @@ export class Register extends Component {
         "password": data.get("password"),
         "company" :{"catchPhrase": "Happy",}
       }
-      // console.log(new_user)
-      // console.log("1")
-      localStorage.setItem("curUser", JSON.stringify(new_user))
+      store.dispatch({type: "changeLoginStatus", data: true})
       store.dispatch({type: "getUser", data: new_user})
+      this.setState({
+        login : true
+      })
     } else if (data.get("password") !== data.get("confirmPassword")) {
       this.setState({ pwdErrorText: "Password does not match" });
     } else {

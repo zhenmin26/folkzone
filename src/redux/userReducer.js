@@ -2,31 +2,13 @@ let initState = {
   login: false,
   allUsers: [],
   friendUserIds: [],
-  curUser: {}
-  // curUser: {
-  //   "id": 0,
-  //   "name": "new user",
-  //   "username": "newbee",
-  //   "email": "Sincere@april.biz",
-  //   "address": {
-  //     "street": "Kulas Light",
-  //     "suite": "Apt. 556",
-  //     "city": "Gwenborough",
-  //     "zipcode": "92998-3874",
-  //     "geo": {
-  //       "lat": "-37.3159",
-  //       "lng": "81.1496"
-  //     }
-  //   },
-  //   "phone": "1-770-736-8031 x56442",
-  //   "website": "hildegard.org",
-  //   "company": {
-  //     "name": "Romaguera-Crona",
-  //     "catchPhrase": "Multi-layered client-server neural-net",
-  //     "bs": "harness real-time e-markets"
-  //   }
-  // }
+  friends: [],
+  curUser: {},
+  allPostsInUser: [],
+  postsInUser: [],
+  error: ""
 };
+export { initState };
 
 export default function userReducer(preState = initState, action) {
   const { type, data } = action;
@@ -41,11 +23,20 @@ export default function userReducer(preState = initState, action) {
       // return preState;
       return {...preState, allUsers: data}
 
+    // case "setCurUser":
+
+
     case "getUser":
       // preState.curUser = data;
       // console.log(preState.curUser)
       // return preState;
-      return {...preState, curUser: data}
+      if(data !== {}){
+        return {...preState, curUser: data}
+      }
+      else{
+        return {...preState, error: "Invalid user"}
+      }
+      
 
     case "getFriendUserId":
       // preState.friendUserIds = data;
@@ -54,12 +45,31 @@ export default function userReducer(preState = initState, action) {
       // return preState;
       return {...preState, friendUserIds: data}
 
+    case "getFriends":
+      // console.log(data)
+      return {...preState, friends: data}
+
     case "addFriend":
       // preState.friendUserIds.push(data);
       // localStorage.setItem("friendUserIds", JSON.stringify(preState.friendUserIds));
       // console.log(preState.friendUserIds)
       // return preState
-      return {...preState, friendUserIds: preState.friendUserIds.push(data)}
+      return {...preState, friendUserIds: preState.friendUserIds.concat([data])}
+
+    case "changeUserState":
+      preState.curUser.company.catchPhrase = data
+      return {...preState}
+
+    case "getAllPostsInUser":
+      return {...preState, allPostsInUser: data}
+
+    case "getpostsInUser":
+      // console.log(data)
+      return {...preState, postsInUser: data}
+
+    case "addPostsInUser":
+      // console.log(preState.postsInUser.concat(data))
+      return {...preState, postsInUser: preState.postsInUser.concat(data)}
 
     default:
       return preState;

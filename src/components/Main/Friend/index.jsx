@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Avatar, Typography, Container, Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import store from "../../../redux/store";
-import { ConstructionOutlined } from "@mui/icons-material";
 
 export default class Friend extends Component {
   constructor(props) {

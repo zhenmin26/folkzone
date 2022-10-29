@@ -28,6 +28,7 @@ export default class User extends Component {
     this.setState({
       status: data.get("status"),
     });
+    store.dispatch({type:"changeUserState", data: data.get("status")})
   }
 
   render() {

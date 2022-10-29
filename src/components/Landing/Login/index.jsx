@@ -23,6 +23,27 @@ export class Login extends Component {
     };
   }
 
+  getPosts(user){
+    let allPosts = store.getState().postReducer.allPosts;
+    let posts;
+    for (var j = 0; j < allPosts.length; j += 10) {
+      if (allPosts[j].userId === user.id) {
+        posts = allPosts.slice(j, j + 10);
+        posts.forEach((post) => {
+          post.date = this.randomDate(new Date(2012, 0, 1), new Date());
+          post.username = user.username;
+        });
+        // console.log(posts);
+        // sort posts by date
+        posts.sort(function (a, b) {
+          return new Date(b.date) - new Date(a.date);
+        });
+        break;
+      }
+    }
+    return posts;
+  }
+
   randomDate(start, end) {
     var d = new Date(
         start.getTime() + Math.random() * (end.getTime() - start.getTime())
@@ -57,11 +78,14 @@ export class Login extends Component {
         // get friend users
         const curId = user.id;
         let friendIds = new Array(3);
+        let friends = new Array(3);
         for (var i = 1; i <= 3; i++) {
           if (curId + i == 10) {
             friendIds[i - 1] = 10;
+            friends[i-1] = store.getState().userReducer.allUsers[9]
           } else {
             friendIds[i - 1] = (curId + i) % 10;
+            friends[i-1] = store.getState().userReducer.allUsers[(curId + i) % 10 - 1]
           }
         }
         let allPosts = store.getState().postReducer.allPosts;
@@ -71,6 +95,7 @@ export class Login extends Component {
             posts = allPosts.slice(j, j + 10);
             posts.forEach((post) => {
               post.date = this.randomDate(new Date(2012, 0, 1), new Date());
+              post.username = user.username;
             });
             // console.log(posts);
             // sort posts by date
@@ -78,10 +103,12 @@ export class Login extends Component {
               return new Date(b.date) - new Date(a.date);
             });
             store.dispatch({ type: "getPosts", data: posts });
+            store.dispatch({type: "getpostsInUser", data: posts})
             break;
           }
         }
         store.dispatch({ type: "getFriendUserId", data: friendIds });
+        store.dispatch({ type: "getFriends", data: friends });
         this.setState({ login: true });
         store.dispatch({ type: "changeLoginStatus", data: true})
       } else {

@@ -28,17 +28,23 @@ export default class Main extends Component {
   constructor(props) {
     // console.log(store.getState().userReducer)
     super(props);
+    // console.log(store.getState().userReducer.friendUserIds)
+    // console.log(store.getState().userReducer.postsInUser)
     this.state = {
       login: store.getState().userReducer.login,
       show_cards: [1, 2, 3],
-      length: 10,
-      posts: store.getState().postReducer.posts,
+      // length: 10,
+      // posts: store.getState().postReducer.posts,
+      allPosts: store.getState().userReducer.allPostsInUser,
+      posts: store.getState().userReducer.postsInUser,
       curUser: store.getState().userReducer.curUser,
       allUsers: store.getState().userReducer.allUsers,
       friendUserIds: store.getState().userReducer.friendUserIds,
+      friends: store.getState().userReducer.friends,
       searchValue: "",
       friendInput: "",
       text: "",
+      addFriendError: ""
     };
   }
 
@@ -65,12 +71,12 @@ export default class Main extends Component {
 
   onClickBack = () => {
     // console.log("back")
-    const length = this.state.length; // 10
+    const length = this.state.posts.length;
     let prev_show_cards = this.state.show_cards;
     let new_show_cards = [0, 0, 0];
     for (var i = 0; i < 3; i++) {
       if (prev_show_cards[i] === 1) {
-        prev_show_cards[i] = 10;
+        prev_show_cards[i] = length;
         new_show_cards[i] = prev_show_cards[i];
         continue;
       }
@@ -114,16 +120,46 @@ export default class Main extends Component {
     event.preventDefault();
     // get new friend username
     const data = new FormData(event.currentTarget);
-    // console.log(data.get("friend"));
+    // console.log("handle submit", data.get("friend"));
+    let res = false;
     this.state.allUsers.forEach((user) => {
       if (user.username === data.get("friend")) {
+        // add friend
         store.dispatch({ type: "addFriend", data: user.id });
         this.setState({
           friendUserIds: store.getState().userReducer.friendUserIds,
           friendInput: "",
         });
+        // add friend's posts
+        // console.log("adding posts for new friend")
+        for (var j = 0; j < this.state.allPosts.length; j += 10) {
+          if (this.state.allPosts[j].userId === user.id) {
+            let friend_posts = this.state.allPosts.slice(j, j + 10);
+            friend_posts.forEach((post) => {
+              post.date = this.randomDate(new Date(2012, 0, 1), new Date());
+              post.username = user.username;
+            });
+            // console.log("friend posts", friend_posts);
+            // sort posts by date
+            friend_posts.sort(function (a, b) {
+              return new Date(b.date) - new Date(a.date);
+            });
+            // store.dispatch({ type: "addPostsInUser", data: friend_posts });
+            this.setState({
+              posts: this.state.posts.concat(friend_posts)
+            })
+            break;
+          }
+        }
+        res = true
       }
     });
+    // console.log(res)
+    if(res == false){
+      this.setState({
+        addFriendError: "Invalid friend name"
+      })
+    }
   }
 
   handleSearch(event) {
@@ -138,7 +174,7 @@ export default class Main extends Component {
       });
     } else {
       // console.log(this.state.posts)
-      let posts = JSON.parse(localStorage.getItem("posts"));
+      let posts = this.state.posts;
       let shows = [];
       posts.forEach((post) => {
         if (
@@ -184,9 +220,11 @@ export default class Main extends Component {
             variant="text"
             onClick={() => {
               // console.log("user log out")
-              localStorage.setItem("login", false);
-              // localStorage.setItem("curUser", null);
-              // localStorage.setItem("friendUserIds", JSON.stringify([]));
+              // localStorage.setItem("login", false);
+              store.dispatch({type: "changeLoginStatus", data: false})
+              this.setState({
+                login : false
+              })
             }}
           >
             {/* Log out */}
@@ -219,21 +257,25 @@ export default class Main extends Component {
               {/* frinds */}
               <Box component="form" onSubmit={this.handleSubmit.bind(this)}>
                 <Grid>
-                  {this.state.friendUserIds.map((user) => {
+                  {
+                  this.state.friendUserIds.map((user) => {
                     // console.log(userId)
-                    return (
-                      <Grid spacing={2} direction="column" container>
-                        <Grid item>
-                          <Friend
-                            userInfo={user}
-                            onRemoveFriend={this.onChangeState.bind(this)}
-                          />
+                    if(user){
+                      return (
+                        <Grid spacing={2} direction="column" container>
+                          <Grid item>
+                            <Friend
+                              userInfo={user}
+                              onRemoveFriend={this.onChangeState.bind(this)}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Divider />
+                          </Grid>
                         </Grid>
-                        <Grid item>
-                          <Divider />
-                        </Grid>
-                      </Grid>
-                    );
+                      );
+                    }
+                    
                   })}
                 </Grid>
                 <TextField
@@ -246,6 +288,8 @@ export default class Main extends Component {
                   onChange={(e) => {
                     this.setState({ friendInput: e.target.value });
                   }}
+                  helperText = {this.state.addFriendError}
+                  error = {this.state.addFriendError === "Invalid friend name"}
                 />
                 <Button
                   type="submit"
@@ -380,12 +424,13 @@ export default class Main extends Component {
                     {/* {this.state.show_cards.map((show_card) => <Post key={show_card} />)} */}
                     {/* {this.state.show_cards.map((show_card) => <Post key={show_card} />)} */}
                     {this.state.show_cards.map((card_index) => {
+                      // console.log(this.state.posts.length)
                       for (var i = 0; i < this.state.posts.length; i++) {
                         if (i === card_index - 1) {
                           return (
                             <Post
                               cur_post={this.state.posts[i]}
-                              author={this.state.curUser}
+                              author={this.state.posts[i]}
                             />
                           );
                         }

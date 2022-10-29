@@ -19,7 +19,7 @@ export class Landing extends Component {
       .then((json) => {
         // get all users
         store.dispatch({ type: "getAllUser", data: json });
-        store.dispatch({ type: "changeLoginStatus", data: false})
+        store.dispatch({ type: "changeLoginStatus", data: false});
       });
   }
 
@@ -29,6 +29,7 @@ export class Landing extends Component {
       .then((json) => {
         // get all posts
         store.dispatch({ type: "getAllPost", data: json });
+        store.dispatch({ type: "getAllPostsInUser", data: json});
       });
   }
 
